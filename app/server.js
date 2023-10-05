@@ -1,10 +1,13 @@
 const express = require('express');
 const favicon = require('serve-favicon');
 const path = require('path');
+const messages = require("./messages");
+
 
 const app = express();
 
 // public assets
+app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(favicon(path.join(__dirname, 'public/images', 'favicon.ico')));
 app.use('/coverage', express.static(path.join(__dirname, '..', 'coverage')));
