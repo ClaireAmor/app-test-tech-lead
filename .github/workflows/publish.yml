@@ -1,5 +1,5 @@
 name: publish
-on: [push, pull_request]
+on: [push]
 jobs:
   publish-hello-docker-image:
     runs-on: ubuntu-latest
@@ -15,5 +15,3 @@ jobs:
       run: |
         docker build . --tag ghcr.io/claireamor/app-test-tech-lead:staging
         docker push ghcr.io/claireamor/app-test-tech-lead:staging
-    - name: Coveralls
-      uses: coverallsapp/github-action@v2
