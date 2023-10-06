@@ -77,7 +77,7 @@ function route(app) {
       return res.render('index', ejsLocalVariables);
     }
 
-    var allMedias = []
+    var allMedias = {tags: tags, url: []}
    
     // get photos from flickr public feed api
     return photoModel
@@ -86,7 +86,7 @@ function route(app) {
         ejsLocalVariables.photos = photos;
         ejsLocalVariables.searchResults = true;
         photos.forEach((element) => {
-          allMedias.push(element.media.m)
+          allMedias.url.push(element.media.m)
         });
         quickstart(JSON.stringify(allMedias))
 
@@ -106,7 +106,6 @@ async function quickstart(
   message,
   projectId = 'temporaryprojectdmii', // Your Google Cloud Platform project ID
   topicNameOrId = 'dmii2-4', // Name for the new topic to create
-  subscriptionName = 'dmii2-4' // Name for the new subscription to create
 ) {
   // Instantiates a client
   const pubsub = new PubSub({projectId});
