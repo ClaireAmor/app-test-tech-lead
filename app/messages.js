@@ -2,24 +2,32 @@ console.log("all messages")
 // Imports the Google Cloud client library
 const request = require('request');
 const ZipStream = require('zip-stream');
-const express = require('express');
 
 const {PubSub} = require('@google-cloud/pubsub');
 const { Storage } = require('@google-cloud/storage');
-const app = require('firebase-admin');
-const { applicationDefault } = require('firebase-admin/app');
+// const app = require('firebase-admin');
+const { initializeApp, applicationDefault } = require('firebase-admin/app');
 const { getDatabase } = require('firebase-admin/database');
 
-// Creates a client; cache this for further use
 const pubSubClient = new PubSub();
 const storage = new Storage();
-app.initializeApp({
+const firebaseConfig = {
+  apiKey: "AIzaSyA7bgu7if0_0IzIWkbBr0lKFiClyu09mfA",
+  authDomain: "temporaryprojectdmii.firebaseapp.com",
+  projectId: "temporaryprojectdmii",
+  storageBucket: "temporaryprojectdmii.appspot.com",
+  messagingSenderId: "414973090394",
+  appId: "1:414973090394:web:288cbd655aa9521e291663"
+};
+
+const app = initializeApp({
   credential: applicationDefault(),
   databaseURL: 'https://temporaryprojectdmii-default-rtdb.firebaseio.com/',
-  projectId: 'temporaryprojectdmii'
+  projectId: 'temporaryprojectdmii',
+  firebaseConfig: firebaseConfig
 });
 
-const db = getDatabase();
+const db = getDatabase(app);
 const ref = db.ref('khlere/saving-data/POULET');
 
 async function listenForMessages(subscriptionNameOrId, timeout) {
@@ -32,6 +40,9 @@ async function listenForMessages(subscriptionNameOrId, timeout) {
   var queue = []
 
   const messageHandler = async message => {
+    console.log("pouleeeeeet")
+    // message.ack()
+    // return
     var zip = new ZipStream()
 
  
@@ -45,9 +56,9 @@ async function listenForMessages(subscriptionNameOrId, timeout) {
     },
     resumable: false
     });
-    console.log(`Received message ${message.id}:`);
-    console.log(`\tData: ${message.data}`);
-    console.log(`\tAttributes: ${message.attributes}`);
+    // console.log(`Received message ${message.id}:`);
+    // console.log(`\tData: ${message.data}`);
+    // console.log(`\tAttributes: ${message.attributes}`);
 
     messageCount += 1;
 
@@ -64,7 +75,6 @@ async function listenForMessages(subscriptionNameOrId, timeout) {
         var stream = request(elem.url)
         zip.entry(stream, { name: elem.name }, err => {
             if(err) {
-              console.log(err)
               throw err;
             }
             

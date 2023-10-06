@@ -48,5 +48,58 @@
 
     </div>
     <button type="submit" class="btn btn-primary">Zip zip zip</button>
+   
   </form>
+  <button type="submit" id="myBtn" class="btn btn-primary">CONNEXION DE TES ANCETRES</button>
 </div>
+
+<script type="module" >
+
+  import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.4.0/firebase-app.js'
+  import { getDatabase } from 'https://www.gstatic.com/firebasejs/10.4.0/firebase-database.js'
+  import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'https://www.gstatic.com/firebasejs/10.4.0/firebase-auth.js'
+  document.getElementById("myBtn").addEventListener("click", logAndSend);
+
+  function logAndSend() {
+    const firebaseConfig = {
+      apiKey: "AIzaSyA7bgu7if0_0IzIWkbBr0lKFiClyu09mfA",
+      authDomain: "temporaryprojectdmii.firebaseapp.com",
+      projectId: "temporaryprojectdmii",
+      storageBucket: "temporaryprojectdmii.appspot.com",
+      messagingSenderId: "414973090394",
+      appId: "1:414973090394:web:288cbd655aa9521e291663"
+    };
+
+    const app = initializeApp(firebaseConfig);
+
+    const auth = getAuth(app);
+
+    const email = "poulet@bucket.com";
+    const password = "123soleil";
+
+    signInWithEmailAndPassword(auth, email, password)
+      .then((userCredential) => {
+          // L'utilisateur a été créé avec succès
+        const user = userCredential.user;
+        console.log("Utilisateur connecté avec succès:", user);
+      })
+      .catch((error) => {
+        createUserWithEmailAndPassword(auth, email, password)
+          .then((userCredential) => {
+            // L'utilisateur a été créé avec succès
+            const user = userCredential.user;
+            console.log("Utilisateur créé avec succès:", user);
+          })
+          .catch((error) => {
+            // Une erreur s'est produite lors de la création de l'utilisateur
+            const errorCode = error.code;
+            const errorMessage = error.message;
+            console.error("Erreur de création d'utilisateur:", errorCode, errorMessage);
+          });
+        // Une erreur s'est produite lors de la création de l'utilisateur
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        console.error("Erreur de création d'utilisateur:", errorCode, errorMessage);
+      });
+  }
+</script>
