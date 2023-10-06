@@ -5,6 +5,7 @@ const ZipStream = require('zip-stream');
 
 const {PubSub} = require('@google-cloud/pubsub');
 const { Storage } = require('@google-cloud/storage');
+var moment = require('moment')
 // const app = require('firebase-admin');
 const { initializeApp, applicationDefault } = require('firebase-admin/app');
 const { getDatabase } = require('firebase-admin/database');
@@ -28,7 +29,7 @@ const app = initializeApp({
 });
 
 const db = getDatabase(app);
-const ref = db.ref('khlere/saving-data/POULET');
+const ref = db.ref(process.env.DB_PATH);
 
 async function listenForMessages(subscriptionNameOrId, timeout) {
   // References an existing subscription
@@ -77,7 +78,6 @@ async function listenForMessages(subscriptionNameOrId, timeout) {
             if(err) {
               throw err;
             }
-            
             if(queue.length > 0)
                 addNextFile()
             else
@@ -86,21 +86,31 @@ async function listenForMessages(subscriptionNameOrId, timeout) {
     }
 
     addNextFile()
+
+    const options = { 
+      action: 'read',
+      expires: moment().add(2, 'days').unix() * 1000
+    };
+    const signedUrls = await storage
+           .bucket(process.env.STORAGE_BUCKET)
+           .file("poulet")
+           .getSignedUrl(options);
     
     return new Promise ((resolve, reject) => {
         stream.on('error', (err) => {
         reject(err);
       });
       stream.on('finish', () => {
-        message.ack();
-        resolve('Ok');
         const zipRef = ref.child('zip');
         zipRef.set({
           zip: {
             tags: arrayOfMessage.tags,
             files: path,
+            zipRef: signedUrls
           },
         });
+        message.ack();
+        resolve('Ok');
         });
     });    
   };

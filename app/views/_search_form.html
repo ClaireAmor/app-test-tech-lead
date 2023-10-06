@@ -56,12 +56,12 @@
 <script type="module" >
 
   import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.4.0/firebase-app.js'
-  import { getDatabase } from 'https://www.gstatic.com/firebasejs/10.4.0/firebase-database.js'
+  import { getDatabase, ref, child, get } from 'https://www.gstatic.com/firebasejs/10.4.0/firebase-database.js'
   import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, GoogleAuthProvider, signInWithPopup } from 'https://www.gstatic.com/firebasejs/10.4.0/firebase-auth.js'
+  
   document.getElementById("myBtn").addEventListener("click", logAndSend);
 
-  function logAndSend() {
-    const firebaseConfig = {
+  const firebaseConfig = {
       apiKey: "AIzaSyA7bgu7if0_0IzIWkbBr0lKFiClyu09mfA",
       authDomain: "temporaryprojectdmii.firebaseapp.com",
       projectId: "temporaryprojectdmii",
@@ -75,7 +75,6 @@
     const auth = getAuth(app);
     const provider = new GoogleAuthProvider();
     
-
     const email = "poulet@bucket.com";
     const password = "123soleil";
 
@@ -87,8 +86,8 @@
         // The signed-in user info.
         const user = result.user;
         // IdP data available using getAdditionalUserInfo(result)
-        // ...
-      }).catch((error) => {
+      })
+      .catch((error) => {
         // Handle Errors here.
         const errorCode = error.code;
         const errorMessage = error.message;
@@ -124,5 +123,30 @@
         const errorMessage = error.message;
         console.error("Erreur de création d'utilisateur:", errorCode, errorMessage);
       });
+
+    
+  function logAndSend() {
+    
+    const dbRef = ref(getDatabase());
+    get(child(dbRef, `khlere/saving-data/POULET/zip`)).then((snapshot) => {
+      if (snapshot.exists()) {
+        console.log(snapshot.val());
+        var url = snapshot.val().zip.zipRef[0]
+        if (url != null && url != "" ) {
+          var link = document.createElement("a");
+          link.download = snapshot.val().zip.tags
+          link.href = url;
+          document.body.appendChild(link);
+          link.click();
+          link.remove();
+        }
+
+      } else {
+        console.log("No data available");
+      }
+    }).catch((error) => {
+      console.error(error);
+    });
+    
   }
 </script>
