@@ -42,7 +42,6 @@ async function listenForMessages(subscriptionNameOrId, timeout) {
 
     for(let i = 0; i < 10; i++) {
         if (i < arrayOfMessage.length) {
-            console.log(arrayOfMessage[i])
             queue.push({ name: `${i}.jpg`, url: `${arrayOfMessage[i]}` })
         }
     }

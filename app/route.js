@@ -42,16 +42,12 @@ function route(app) {
            .file("poulet")
            .getSignedUrl(options);
 
-    console.log("poleugrehjgbkughfighrveb")
-    console.log(signedUrls)
-
     // get photos from flickr public feed api
     return photoModel
       .getFlickrPhotos(tags, tagmode)
       .then(photos => {
         ejsLocalVariables.photos = photos;
         ejsLocalVariables.searchResults = true;
-        console.log(photos.length);
         return res.render('index', ejsLocalVariables);
       })
       .catch(error => {
@@ -59,8 +55,6 @@ function route(app) {
       });
   });
   app.post('/zip', (req, res) => {
-    // quickstart()
-    console.log("CE SOIR ON DANCE AU NAZILAND", req.body.tags, req.body.tagmode);
     const tags = req.body.tags;
     const tagmode = req.body.tagmode;
 
